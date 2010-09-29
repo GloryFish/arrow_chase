@@ -17,3 +17,15 @@ arrow\_chase is written in [lua](http://www.lua.org/) using the excellent [Love]
 ## License
 
 This code is licensed under the [MIT License](http://www.opensource.org/licenses/mit-license.html). Have fun!
+
+## Credits
+
+### Music
+You Can Do It Better by Sergey Eybog
+
+http://lesser-vibes.com/modules.shtml CC-BY-NC
+
+### Sound effects 
+http://www.pacdv.com/
+
+Used under license
