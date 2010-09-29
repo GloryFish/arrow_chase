@@ -17,9 +17,20 @@ Arrow = class(function(arrow, dir, pos, speed)
                 x = 1.0,
                 y = 1.0,
               }
+              
+              arrow.color = {
+                r = 255,
+                g = 255,
+                b = 255,
+                a = 255,
+              }
+              
+              arrow.deathTime = 0
+              arrow.deathTimeMax = 3  -- 3 seconds to fade out
 
               arrow.image = love.graphics.newImage('resources/textures/arrow-green.png')
               arrow.imageSelected = love.graphics.newImage('resources/textures/arrow-red.png')
+              arrow.imageDying = love.graphics.newImage('resources/textures/arrow-grey.png')
 
               arrow.offset = {
                 x = arrow.image:getWidth() / 2,
@@ -42,6 +53,13 @@ function Arrow:reset(dir, pos, speed)
   self.position = pos
   self.speed = speed
   self.state = 'normal'
+  self.color = {
+    r = 255,
+    g = 255,
+    b = 255,
+    a = 255,
+  }
+  self.deathTime = 0
   
   if dir == 'down' then
     self.orientation = 0
@@ -55,7 +73,18 @@ function Arrow:reset(dir, pos, speed)
 end
 
 function Arrow:update(dt)
-  self:move(dt)
+  if self.state == 'dying' then
+     self.deathTime = self.deathTime + dt
+     
+     if (self.deathTime > self.deathTimeMax) then
+       self:setState('dead')
+     else
+       self.color.a = math.floor((1.0 - self.deathTime / self.deathTimeMax) * 255)
+     end
+     
+  else
+    self:move(dt)
+  end
 end
 
 function Arrow:move(dt)
@@ -100,6 +129,22 @@ function Arrow:containsPoint(point)
          point.y < self.position.y + (self.image:getHeight() / 2)
 end
 
+-- Returns true if the supplied point is "behind" the arrow
+function Arrow:isInFrontOfPoint(point)
+  if self.direction == 'up' then
+    return point.y > self.position.y + (self:getHeight() / 2)
+
+  elseif self.direction == 'down' then
+    return point.y < self.position.y - (self:getHeight() / 2)
+
+  elseif self.direction == 'left' then
+    return point.x > self.position.x + (self:getWidth() / 2)
+
+  elseif self.direction == 'right' then
+    return point.x < self.position.x - (self:getWidth() / 2)
+  end
+end
+
 function Arrow:setState(state)
   self.state = state
   
@@ -117,29 +162,29 @@ function Arrow:setState(state)
 end
 
 function Arrow:draw()
-  if (self.state == 'selected') then
-    love.graphics.draw(
-      self.imageSelected, 
-      math.floor(self.position.x),
-      math.floor(self.position.y), 
-      self.orientation, 
-      self.scale.x, 
-      self.scale.y, 
-      self.offset.x,
-      self.offset.y
-      )
+  local image = nil;
+  if self.state == 'selected' then
+    image = self.imageSelected
+  elseif self.state == 'dying' then
+    image = self.imageDying
   else
-    love.graphics.draw(
-      self.image, 
-      math.floor(self.position.x),
-      math.floor(self.position.y), 
-      self.orientation, 
-      self.scale.x, 
-      self.scale.y, 
-      self.offset.x,
-      self.offset.y
-      )
+    image = self.image 
   end
+
+  love.graphics.setColor(self.color.r,
+                         self.color.g,
+                         self.color.b,
+                         self.color.a);
+  love.graphics.draw(
+    image, 
+    math.floor(self.position.x),
+    math.floor(self.position.y), 
+    self.orientation, 
+    self.scale.x, 
+    self.scale.y, 
+    self.offset.x,
+    self.offset.y
+    )
 end
 
 -- can create an Account using call notation!

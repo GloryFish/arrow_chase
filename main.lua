@@ -32,7 +32,6 @@ chase.const = {
   maxArrows = 20,
 }
 
-
 chase.directions = {
   'up',
   'down',
@@ -60,6 +59,11 @@ function love.load()
   chase.arrows = {}
   chase.inactive = {}
   
+  chase.lastMouse = {
+    x = love.mouse.getX(),
+    y = love.mouse.getY(),
+  } 
+  
   chase.resume()
 end
 
@@ -79,24 +83,38 @@ function chase.update(dt)
   local toRemove = {}
   
   for index, arrow in pairs(chase.arrows) do
-    if arrow:isOffscreen() then
+    if arrow.state == 'dead' then
+      -- Remove arrows that died during the last update
       table.insert(toRemove, index)
-      break
-    end
-    
-    if arrow:containsPoint( {x = love.mouse.getX(), y = love.mouse.getY()} ) then
-      arrow:setState('selected')
-    else
+
+    elseif arrow:isOffscreen() then
+      -- remove arrows that moved offscreen
+      table.insert(toRemove, index)
+
+    elseif arrow:containsPoint( {x = love.mouse.getX(), y = love.mouse.getY()}) and arrow.state == 'normal' then
+      -- Check for mouse hovers
+      if arrow:isInFrontOfPoint(chase.lastMouse) then
+        -- This is a new selection from behind the arrow
+        arrow:setState('selected')
+      else
+        -- This is a failed selection
+        arrow:setState('dying')
+      end
+    elseif arrow.state == 'selected' and not arrow:containsPoint( {x = love.mouse.getX(), y = love.mouse.getY()}) then
+      --  Mouse has moved off arrow
       arrow:setState('normal')
     end
-    
     arrow:update(dt)
-
   end
   
   for i, index in pairs(toRemove) do
     chase.deactivateArrow(index)
   end
+  
+  chase.lastMouse = {
+    x = love.mouse.getX(),
+    y = love.mouse.getY(),
+  } 
   
 end
 
@@ -166,7 +184,6 @@ chase.getRandomStart = {
 
 
 function chase.draw()
-  love.graphics.setColor(255, 255, 255, 255);
   for index, arrow in pairs(chase.arrows) do
     arrow:draw()
   end
