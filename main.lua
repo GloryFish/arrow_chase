@@ -33,9 +33,9 @@ chase.score = 0
 chase.points = 0
 
 chase.const = {
-  minSpeed = 200,
-  maxSpeed = 300,
-  maxArrows = 10000,
+  minSpeed = 20,
+  maxSpeed = 200,
+  maxArrows = 20,
 }
 
 chase.directions = {
@@ -45,16 +45,14 @@ chase.directions = {
   'left',
 }
 
--- chase.directions = {
---   'down',
--- }
-
 function love.load()
   chase.seed = os.time()
 
   math.randomseed(chase.seed);
   
   love.filesystem.setIdentity('arrow_chase')
+  
+  love.mouse.setGrab(true)
   
   -- Set graphics options
   love.graphics.setCaption("arrow_chase 0.1")
