@@ -1,0 +1,19 @@
+# arrow\_chase
+
+## About
+
+arrow\_chase is a simple game where the object is to click on the arrows whizzing across the screen. The more you click the more points you get and the harder it becomes.
+
+The catch is, you have to sneak up on the arrow from behind or it will disappear.
+
+This game requires speed and dexterity.
+
+
+## The Code
+
+arrow\_chase is written in [lua](http://www.lua.org/) using the excellent [Love](http://love2d.org/) framework.
+
+
+## License
+
+This code is licensed under the [MIT License](http://www.opensource.org/licenses/mit-license.html). Have fun!
