@@ -25,8 +25,23 @@ Arrow = class(function(arrow, dir, pos, speed)
                 a = 255,
               }
               
+              -- Settings for death fadeout
               arrow.deathTime = 0
-              arrow.deathTimeMax = 3  -- 3 seconds to fade out
+              arrow.deathTimeMax = 4
+
+              -- Settings for arrow halo effect
+              arrow.haloTime = 0
+              arrow.haloTimeMax = 0.8
+              arrow.haloAlpha = 255
+              arrow.haloScale = {
+                x = arrow.scale.x,
+                y = arrow.scale.y,
+              } 
+              arrow.haloScaleMax = {
+                x = arrow.scale.x * 50,
+                y = arrow.scale.y * 50,
+              }
+
 
               arrow.image = chase.images.arrowNormal
               arrow.imageSelected = chase.images.arrowSelected
@@ -53,6 +68,10 @@ function Arrow:reset(dir, pos, speed)
   self.position = pos
   self.speed = speed
   self.state = 'normal'
+  self.scale = {
+    x = 1.0,
+    y = 1.0,
+  }
   self.color = {
     r = 255,
     g = 255,
@@ -60,6 +79,8 @@ function Arrow:reset(dir, pos, speed)
     a = 255,
   }
   self.deathTime = 0
+  
+  arrow.haloTime = 0
   
   if dir == 'down' then
     self.orientation = 0
@@ -82,6 +103,14 @@ function Arrow:update(dt)
        self.color.a = math.floor((1.0 - self.deathTime / self.deathTimeMax) * 255)
      end
      
+  elseif self.state == 'clicked' then
+    self.haloTime = self.haloTime + dt
+    if self.haloTime < self.haloTimeMax then
+      self.haloAlpha = math.floor((1.0 - self.haloTime / self.haloTimeMax) * 255)
+      self.haloScale.x = self.scale.x + (self.haloTime / self.haloTimeMax) * (self.haloScaleMax.x - self.scale.x)
+      self.haloScale.y = self.scale.y + (self.haloTime / self.haloTimeMax) * (self.haloScaleMax.y - self.scale.y)
+    end
+    self:move(dt)
   else
     self:move(dt)
   end
@@ -156,8 +185,13 @@ function Arrow:setState(state)
 
   elseif state == 'clicked' then
     self.scale = {
-      x = 3,
-      y = 3,
+      x = 2,
+      y = 2,
+    }
+    
+    self.haloScale = {
+      x = 2,
+      y = 2,
     }
 
   else
@@ -177,6 +211,24 @@ function Arrow:draw()
   else
     image = self.image 
   end
+  
+  if self.state == 'clicked' and self.haloTime < self.haloTimeMax then
+    love.graphics.setColor(self.color.r,
+                           self.color.g,
+                           self.color.b,
+                           self.haloAlpha);
+    love.graphics.draw(
+     image, 
+     math.floor(self.position.x),
+     math.floor(self.position.y), 
+     self.orientation, 
+     self.haloScale.x, 
+     self.haloScale.y, 
+     self.offset.x,
+     self.offset.y
+     )
+  end
+  
 
   love.graphics.setColor(self.color.r,
                          self.color.g,

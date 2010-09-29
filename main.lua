@@ -27,6 +27,9 @@ chase.ui = {
   }
 }
 
+chase.score = 0
+chase.points = 0
+
 chase.const = {
   topSpeed = 300,
   maxArrows = 20,
@@ -106,6 +109,7 @@ function chase.update(dt)
         arrow:setState('selected')
       else
         -- This is a failed selection
+        chase.deductPoint()
         arrow:setState('dying')
       end
     elseif arrow.state == 'selected' and not arrow:containsPoint( {x = love.mouse.getX(), y = love.mouse.getY()}) then
@@ -115,6 +119,7 @@ function chase.update(dt)
 
     -- Check for clicks
     if arrow.state == 'selected' and love.mouse.isDown('l') and not chase.lastMouse.l then
+      chase.addPoint()
       arrow:setState('clicked')
     end
     
@@ -196,7 +201,14 @@ chase.getRandomStart = {
     end,
 }
   
+function chase.addPoint()
+  chase.score = chase.score + 1
+  chase.points = chase.points + 1
+end
 
+function chase.deductPoint()
+  chase.score = chase.score - 1
+end
 
 function chase.draw()
   for index, arrow in pairs(chase.arrows) do
@@ -210,6 +222,8 @@ function chase.draw()
   love.graphics.print(string.format("FPS: %i", love.timer.getFPS()), chase.ui.logPosition.x, chase.ui.logPosition.y + currentLinePosition); currentLinePosition = currentLinePosition + chase.ui.lineHeight;
   love.graphics.print(string.format("X: %i  Y: %i", love.mouse.getX(), love.mouse.getY()), chase.ui.logPosition.x, chase.ui.logPosition.y + currentLinePosition); currentLinePosition = currentLinePosition + chase.ui.lineHeight;
   love.graphics.print(string.format("Seed: %i", chase.seed), chase.ui.logPosition.x, chase.ui.logPosition.y + currentLinePosition); currentLinePosition = currentLinePosition + chase.ui.lineHeight;
+  love.graphics.print(string.format("Score: %i", chase.score), chase.ui.logPosition.x, chase.ui.logPosition.y + currentLinePosition); currentLinePosition = currentLinePosition + chase.ui.lineHeight;
+  love.graphics.print(string.format("Points: %i", chase.points), chase.ui.logPosition.x, chase.ui.logPosition.y + currentLinePosition); currentLinePosition = currentLinePosition + chase.ui.lineHeight;
 end
 
 -- Reset values when returning to board list
