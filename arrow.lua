@@ -28,9 +28,9 @@ Arrow = class(function(arrow, dir, pos, speed)
               arrow.deathTime = 0
               arrow.deathTimeMax = 3  -- 3 seconds to fade out
 
-              arrow.image = love.graphics.newImage('resources/textures/arrow-green.png')
-              arrow.imageSelected = love.graphics.newImage('resources/textures/arrow-red.png')
-              arrow.imageDying = love.graphics.newImage('resources/textures/arrow-grey.png')
+              arrow.image = chase.images.arrowNormal
+              arrow.imageSelected = chase.images.arrowSelected
+              arrow.imageDying = chase.images.arrowDying
 
               arrow.offset = {
                 x = arrow.image:getWidth() / 2,
