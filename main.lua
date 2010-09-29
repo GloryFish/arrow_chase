@@ -62,6 +62,7 @@ function love.load()
   chase.lastMouse = {
     x = love.mouse.getX(),
     y = love.mouse.getY(),
+    l = false,
   } 
   
   chase.resume()
@@ -104,6 +105,12 @@ function chase.update(dt)
       --  Mouse has moved off arrow
       arrow:setState('normal')
     end
+
+    -- Check for clicks
+    if arrow.state == 'selected' and love.mouse.isDown('l') and not chase.lastMouse.l then
+      arrow:setState('clicked')
+    end
+    
     arrow:update(dt)
   end
   
@@ -114,6 +121,7 @@ function chase.update(dt)
   chase.lastMouse = {
     x = love.mouse.getX(),
     y = love.mouse.getY(),
+    l = love.mouse.isDown('l'),
   } 
   
 end

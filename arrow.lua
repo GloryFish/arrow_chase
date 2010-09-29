@@ -153,6 +153,13 @@ function Arrow:setState(state)
       x = 1.2,
       y = 1.2,
     }
+
+  elseif state == 'clicked' then
+    self.scale = {
+      x = 3,
+      y = 3,
+    }
+
   else
     self.scale = {
       x = 1.0,
