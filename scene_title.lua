@@ -37,7 +37,7 @@ function title.keypressed(self, key, unicode)
 end
 
 function title.mousereleased(self, x, y, button)
-  if button == "l" then
+  if button == "l" and not title.leaving then
     title.leaving = true
     title.leaveStart = title.duration
   end
