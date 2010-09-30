@@ -7,12 +7,16 @@
 -- 
 
 require 'gamestate'
+require 'typeout'
+require 'vector'
 
 title = Gamestate.new()
 
 function title.enter()
   love.graphics.setBackgroundColor(210, 231, 245)
   love.graphics.setFont(fonts.default)
+  
+  title.logo = Typeout('arrow_chase', vector(50, love.graphics.getHeight() - 70), 6, fonts.title, {r=0, g=0, b=0, a=200})
   
 end
 
@@ -24,13 +28,14 @@ function title.keypressed(self, key, unicode)
   end
 end
 
+function title.update(self, dt)
+  title.logo:update(dt)
+end
+
 function title.draw()
   love.graphics.setColor(0, 0, 0, 150)
 
-  love.graphics.setFont(fonts.title)
-  love.graphics.print("arrow_chase", 
-                      love.graphics.getWidth() - 400, 
-                      100);
+  title.logo:draw()
 
   love.graphics.setFont(fonts.default)
   love.graphics.print("Press the letter g", 
