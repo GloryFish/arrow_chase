@@ -7,16 +7,14 @@
 -- 
 
 require 'class'
+require 'vector'
 
 Arrow = class(function(arrow, dir, pos, speed)
               arrow.direction = dir
               arrow.position = pos
               arrow.speed = speed
               arrow.state = 'normal'
-              arrow.scale = {
-                x = 1.0,
-                y = 1.0,
-              }
+              arrow.scale = vector(1.0, 1.0)
               
               arrow.color = {
                 r = 255,
@@ -33,24 +31,14 @@ Arrow = class(function(arrow, dir, pos, speed)
               arrow.haloTime = 0
               arrow.haloTimeMax = 0.8
               arrow.haloAlpha = 255
-              arrow.haloScale = {
-                x = arrow.scale.x,
-                y = arrow.scale.y,
-              } 
-              arrow.haloScaleMax = {
-                x = arrow.scale.x * 50,
-                y = arrow.scale.y * 50,
-              }
-
+              arrow.haloScale = vector(arrow.scale.x, arrow.scale.y)
+              arrow.haloScaleMax = vector(arrow.scale.x * 50, arrow.scale.y * 50)
 
               arrow.image = chase.images.arrowNormal
               arrow.imageSelected = chase.images.arrowSelected
               arrow.imageDying = chase.images.arrowDying
 
-              arrow.offset = {
-                x = arrow.image:getWidth() / 2,
-                y = arrow.image:getHeight() / 2,
-              }
+              arrow.offset = vector(arrow.image:getWidth() / 2, arrow.image:getHeight() / 2)
               
               if dir == 'down' then
                 arrow.orientation = 0
@@ -68,10 +56,7 @@ function Arrow:reset(dir, pos, speed)
   self.position = pos
   self.speed = speed
   self.state = 'normal'
-  self.scale = {
-    x = 1.0,
-    y = 1.0,
-  }
+  self.scale = vector(1.0, 1.0)
   self.color = {
     r = 255,
     g = 255,
@@ -107,8 +92,7 @@ function Arrow:update(dt)
     self.haloTime = self.haloTime + dt
     if self.haloTime < self.haloTimeMax then
       self.haloAlpha = math.floor((1.0 - self.haloTime / self.haloTimeMax) * 255)
-      self.haloScale.x = self.scale.x + (self.haloTime / self.haloTimeMax) * (self.haloScaleMax.x - self.scale.x)
-      self.haloScale.y = self.scale.y + (self.haloTime / self.haloTimeMax) * (self.haloScaleMax.y - self.scale.y)
+      self.haloScale = self.scale + (self.haloTime / self.haloTimeMax) * (self.haloScaleMax - self.scale)
     end
     self:move(dt)
   else
@@ -178,27 +162,15 @@ function Arrow:setState(state)
   self.state = state
   
   if state == 'selected' then
-    self.scale = {
-      x = 1.2,
-      y = 1.2,
-    }
+    self.scale = vector(1.2, 1.2)
 
   elseif state == 'clicked' then
-    self.scale = {
-      x = 2,
-      y = 2,
-    }
+    self.scale = vector(2,2)
     
-    self.haloScale = {
-      x = 2,
-      y = 2,
-    }
+    self.haloScale = vector(2, 2)
 
   else
-    self.scale = {
-      x = 1.0,
-      y = 1.0,
-    }
+    self.scale = vector(1, 1)
   end
 end
 

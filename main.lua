@@ -207,28 +207,16 @@ end
 -- Return an appropriate starting position for an arrow based on its direction
 chase.getRandomStart = {
   ['up'] = function ()
-      return {
-        x = math.random(100, love.graphics.getWidth() - 100),
-        y = love.graphics.getHeight() + 100,
-      }
+      return vector(math.random(100, love.graphics.getWidth() - 100), love.graphics.getHeight() + 100)
     end,
   ['down'] = function ()
-      return {
-        x = math.random(100, love.graphics.getWidth() - 100),
-        y = -100,
-      }
+      return vector(math.random(100, love.graphics.getWidth() - 100), -100)
     end,
   ['left'] = function ()
-      return {
-        x = love.graphics.getWidth() + 100,
-        y = math.random(100, love.graphics.getHeight() - 100),
-      }
+      return vector(love.graphics.getWidth() + 100, math.random(100, love.graphics.getHeight() - 100))
     end,
   ['right'] = function ()
-      return {
-        x = -100,
-        y = math.random(100, love.graphics.getHeight() - 100),
-      }
+      return vector(-100, math.random(100, love.graphics.getHeight() - 100))
     end,
 }
   
