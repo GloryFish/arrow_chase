@@ -36,8 +36,7 @@ function chase.enter(self, pre)
   
   -- Set graphics options
   love.graphics.setBackgroundColor(210, 231, 245)
-  chase.fontDefault = love.graphics.newFont('resources/fonts/pixel.ttf', 15)
-  love.graphics.setFont(chase.fontDefault)
+  love.graphics.setFont(fonts.default)
   
   chase.arrows = {}
   chase.inactive = {}
@@ -135,7 +134,7 @@ end
 
 function chase.keypressed(self, key, unicode)
   if (key == "escape") then
-    love.event.push('q')
+    Gamestate.switch(title)
   elseif (key == "p") then
     chase.togglePaused()
   end

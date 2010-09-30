@@ -18,6 +18,7 @@ require 'arrow'
 require 'logger'
 require 'vector'
 require 'gamestate'
+require 'scene_title'
 require 'scene_chase'
 
 function love.load()
@@ -35,8 +36,14 @@ function love.load()
     arrowDying = love.graphics.newImage('resources/textures/arrow-grey.png'),
   }
   
+  
+  fonts = {
+    default = love.graphics.newFont('resources/fonts/pixel.ttf', 15),
+    title = love.graphics.newFont('resources/fonts/pixel.ttf', 45),
+  }
+  
   Gamestate.registerEvents()
-  Gamestate.switch(chase)
+  Gamestate.switch(title)
 end
 
 
