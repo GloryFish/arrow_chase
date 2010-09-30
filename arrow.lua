@@ -66,6 +66,7 @@ function Arrow:reset(dir, pos, speed)
   self.deathTime = 0
   
   arrow.haloTime = 0
+  arrow.haloAlpha = 255
   
   if dir == 'down' then
     self.orientation = 0
@@ -166,7 +167,7 @@ function Arrow:setState(state)
 
   elseif state == 'clicked' then
     self.scale = vector(2,2)
-    
+    self.haloTime = 0
     self.haloScale = vector(2, 2)
 
   else
