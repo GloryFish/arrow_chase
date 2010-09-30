@@ -18,7 +18,7 @@ require 'arrow'
 require 'logger'
 require 'vector'
 require 'gamestate'
-require 'scenes/chase'
+require 'scene_chase'
 
 function love.load()
   love.filesystem.setIdentity('arrow_chase')
