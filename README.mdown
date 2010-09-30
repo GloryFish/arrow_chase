@@ -18,6 +18,7 @@ This game is an entry into Ludum Dare's October 2010 Challenge. The basic gamepl
 
 arrow\_chase is written in [lua](http://www.lua.org/) using the excellent [Love](http://love2d.org/) framework.
 
+Uses the [HUMP Library](http://github.com/vrld/hump).
 
 ## The License
 
