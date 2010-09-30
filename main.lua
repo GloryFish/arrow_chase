@@ -16,17 +16,9 @@
 
 require 'arrow'
 require 'logger'
+require 'vector'
 
 chase = {}
-
--- Some ui constants
-chase.ui = {
-  lineHeight = 15,
-  logPosition = {
-    x = 50,
-    y = 50,
-  }
-}
 
 chase.paused = false
 
@@ -86,10 +78,9 @@ function love.load()
     click = love.audio.newSource("resources/sound/click.mp3"),
   }
   
-  chase.logger = Logger({
-                    x = 30,
-                    y = 30,
-                    })
+  
+  
+  chase.logger = Logger(vector(30, 30))
   
   love.audio.play(chase.music)
   
