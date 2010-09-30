@@ -15,6 +15,7 @@
 --
 
 require 'arrow'
+require 'logger'
 
 chase = {}
 
@@ -85,6 +86,11 @@ function love.load()
     click = love.audio.newSource("resources/sound/click.mp3"),
   }
   
+  chase.logger = Logger({
+                    x = 30,
+                    y = 30,
+                    })
+  
   love.audio.play(chase.music)
   
   chase.resume()
@@ -100,6 +106,8 @@ function love.mousereleased(x, y, b) end
 
 function chase.update(dt)
   if not chase.paused then
+    
+    chase.logger:update(dt)
   
     if #chase.arrows < chase.const.maxArrows then
       chase.addArrow()
@@ -151,7 +159,14 @@ function chase.update(dt)
       y = love.mouse.getY(),
       l = love.mouse.isDown('l'),
     } 
-
+    
+    -- Add log lines
+    chase.logger:addLine(string.format("FPS: %i", love.timer.getFPS()))
+    chase.logger:addLine(string.format("X: %i  Y: %i", love.mouse.getX(), love.mouse.getY()))
+    chase.logger:addLine(string.format("Seed: %i", chase.seed))
+    chase.logger:addLine(string.format("Score: %i", chase.score))
+    chase.logger:addLine(string.format("Points: %i", chase.points))
+    
   else -- Game is paused
   end
   
@@ -243,16 +258,9 @@ function chase.draw()
   for index, arrow in pairs(chase.arrows) do
     arrow:draw()
   end
+  
+  chase.logger:draw()
 
-  --  Print log stuff
-  love.graphics.setColor(0, 0, 0, 150);
-  local currentLinePosition = 0
-  love.graphics.print(string.format("arrow_chase"), chase.ui.logPosition.x, chase.ui.logPosition.y + currentLinePosition); currentLinePosition = currentLinePosition + chase.ui.lineHeight;
-  love.graphics.print(string.format("FPS: %i", love.timer.getFPS()), chase.ui.logPosition.x, chase.ui.logPosition.y + currentLinePosition); currentLinePosition = currentLinePosition + chase.ui.lineHeight;
-  love.graphics.print(string.format("X: %i  Y: %i", love.mouse.getX(), love.mouse.getY()), chase.ui.logPosition.x, chase.ui.logPosition.y + currentLinePosition); currentLinePosition = currentLinePosition + chase.ui.lineHeight;
-  love.graphics.print(string.format("Seed: %i", chase.seed), chase.ui.logPosition.x, chase.ui.logPosition.y + currentLinePosition); currentLinePosition = currentLinePosition + chase.ui.lineHeight;
-  love.graphics.print(string.format("Score: %i", chase.score), chase.ui.logPosition.x, chase.ui.logPosition.y + currentLinePosition); currentLinePosition = currentLinePosition + chase.ui.lineHeight;
-  love.graphics.print(string.format("Points: %i", chase.points), chase.ui.logPosition.x, chase.ui.logPosition.y + currentLinePosition); currentLinePosition = currentLinePosition + chase.ui.lineHeight;
 end
 
 -- Reset values when returning to board list
