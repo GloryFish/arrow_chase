@@ -39,13 +39,6 @@ function chase.enter(self, pre)
   chase.fontDefault = love.graphics.newFont('resources/fonts/pixel.ttf', 15)
   love.graphics.setFont(chase.fontDefault)
   
-  -- Preload images
-  chase.images = {
-    arrowNormal = love.graphics.newImage('resources/textures/arrow-green.png'),
-    arrowSelected = love.graphics.newImage('resources/textures/arrow-red.png'),
-    arrowDying = love.graphics.newImage('resources/textures/arrow-grey.png'),
-  }
-  
   chase.arrows = {}
   chase.inactive = {}
   

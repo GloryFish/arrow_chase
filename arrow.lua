@@ -34,9 +34,9 @@ Arrow = class(function(arrow, dir, pos, speed)
               arrow.haloScale = vector(arrow.scale.x, arrow.scale.y)
               arrow.haloScaleMax = vector(arrow.scale.x * 50, arrow.scale.y * 50)
 
-              arrow.image = chase.images.arrowNormal
-              arrow.imageSelected = chase.images.arrowSelected
-              arrow.imageDying = chase.images.arrowDying
+              arrow.image = graphics.arrowNormal
+              arrow.imageSelected = graphics.arrowSelected
+              arrow.imageDying = graphics.arrowDying
 
               arrow.offset = vector(arrow.image:getWidth() / 2, arrow.image:getHeight() / 2)
               

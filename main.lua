@@ -28,6 +28,13 @@ function love.load()
   -- Set graphics options
   love.graphics.setCaption("arrow_chase 0.1")
   
+  -- Preload graphics
+  graphics = {
+    arrowNormal = love.graphics.newImage('resources/textures/arrow-green.png'),
+    arrowSelected = love.graphics.newImage('resources/textures/arrow-red.png'),
+    arrowDying = love.graphics.newImage('resources/textures/arrow-grey.png'),
+  }
+  
   Gamestate.registerEvents()
   Gamestate.switch(chase)
 end
