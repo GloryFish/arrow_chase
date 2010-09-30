@@ -10,19 +10,16 @@ require 'gamestate'
 require 'arrow'
 require 'logger'
 require 'vector'
+require 'level'
 
 chase = Gamestate.new()
 
 function chase.enter(self, pre)
   chase.paused = false
-  chase.score = 20
   chase.points = 0
+  chase.misses = 0
 
-  chase.const = {
-    minSpeed = 20,
-    maxSpeed = 200,
-    maxArrows = 20,
-  }
+  chase.level = Level()
 
   chase.directions = {
     'up',
@@ -33,6 +30,7 @@ function chase.enter(self, pre)
 
   chase.seed = os.time()
   math.randomseed(chase.seed);
+  math.random(); math.random(); math.random()  
   
   -- Set graphics options
   love.graphics.setBackgroundColor(210, 231, 245)
@@ -55,21 +53,21 @@ function chase.enter(self, pre)
   
   chase.logger = Logger(vector(30, 30))
   
+  chase.duration = 0.00001
+  
   love.audio.play(music.chase)
 end
 
 function chase.update(self, dt)
-  val = dt * 2
+  chase.duration = chase.duration + dt
   
   if not chase.paused then
     
     chase.logger:update(dt)
-  
-    if #chase.arrows < chase.const.maxArrows then
-      chase.addArrow()
-    end
-  
+
+    -- Loop through arrows and process them
     local toRemove = {}
+    local activeArrowCount = 0
   
     for index, arrow in pairs(chase.arrows) do
       if arrow.state == 'dead' then
@@ -101,15 +99,30 @@ function chase.update(self, dt)
         chase.addPoint()
         arrow:setState('clicked')
       end
-    
+
+      -- Tally the number of active arrows
+      if arrow.state == 'normal' or arrow.state == 'selected' then
+        activeArrowCount = activeArrowCount + 1
+      end
+      
       arrow:update(dt)
-    
     end
-  
+
+    -- Remove errors marked for deactivation
     for i, index in pairs(toRemove) do
       chase.deactivateArrow(index)
     end
+    
+    -- Should we spawn a new arrow?
+    if activeArrowCount < chase.level.minArrows then
+      chase.addArrow()
+    elseif #chase.arrows < chase.level.maxArrows then
+      if math.random() < chase.level.arrowSpawnChance then
+        chase.addArrow()
+      end
+    end
   
+    -- Store last mouse position
     chase.lastMouse = {
       x = love.mouse.getX(),
       y = love.mouse.getY(),
@@ -118,10 +131,14 @@ function chase.update(self, dt)
     
     -- Add log lines
     chase.logger:addLine(string.format("FPS: %i", love.timer.getFPS()))
-    chase.logger:addLine(string.format("X: %i  Y: %i", love.mouse.getX(), love.mouse.getY()))
-    chase.logger:addLine(string.format("Seed: %i", chase.seed))
-    chase.logger:addLine(string.format("Score: %i", chase.score))
-    chase.logger:addLine(string.format("Points: %i", chase.points))
+    -- chase.logger:addLine(string.format("Score: %i", chase.points - chase.misses))
+    -- chase.logger:addLine(string.format("Misses: %i MPM: %f", chase.misses, chase.misses / chase.duration * 60))
+    -- chase.logger:addLine(string.format("Rating: %i", (chase.points / chase.duration * 60) - (chase.misses / chase.duration * 60)))
+    chase.logger:addLine(string.format("Points: %i", chase.points, chase.points / chase.duration * 60))
+    chase.logger:addLine(string.format("minArrows: %i", chase.level.minArrows))
+    chase.logger:addLine(string.format("maxArrows: %i", chase.level.maxArrows))
+    chase.logger:addLine(string.format("activeArrowCount: %i", activeArrowCount))
+    chase.logger:addLine(string.format("Time: %i:%i", chase.duration / 60, chase.duration % 60))
     
   else -- Game is paused
   end
@@ -131,7 +148,11 @@ end
 
 function chase.keypressed(self, key, unicode)
   if (key == "escape") then
-    Gamestate.switch(title)
+    if chase.paused then
+      chase.togglePaused()
+    else
+      Gamestate.switch(title)
+    end
   elseif (key == "p") then
     chase.togglePaused()
   end
@@ -149,7 +170,7 @@ end
 function chase.addArrow()
   local dir = chase.directions[math.random(1, #chase.directions)]
   local position = chase.getRandomStart[dir]()
-  local speed = math.random(chase.const.minSpeed, chase.const.maxSpeed)
+  local speed = math.random(chase.level.minSpeed, chase.level.maxSpeed)
   local arrow = {}
 
   --  Get an inactive arrow, or create a new one
@@ -186,14 +207,13 @@ chase.getRandomStart = {
 }
   
 function chase.addPoint()
-  chase.score = chase.score + 1
   chase.points = chase.points + 1
-
+  chase.level:setPoints(chase.points)
   love.audio.play(chase.sound.good)
 end
 
 function chase.deductPoint()
-  chase.score = chase.score - 1
+  chase.misses = chase.misses + 1
 
   love.audio.play(chase.sound.bad)
 end
@@ -201,6 +221,16 @@ end
 function chase.draw(self)
   for index, arrow in pairs(chase.arrows) do
     arrow:draw()
+  end
+  
+  if (chase.paused) then
+    love.graphics.setColor(0, 0, 0, 120)
+    love.graphics.rectangle('fill', 0, 0, love.graphics.getWidth(), love.graphics.getHeight())
+    
+    love.graphics.setColor(255, 255, 255, 255)
+    love.graphics.print("paused_", 
+                        love.graphics.getWidth() / 2 - 50, 
+                        love.graphics.getHeight() / 2);
   end
   
   chase.logger:draw()
