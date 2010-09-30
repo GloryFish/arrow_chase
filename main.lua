@@ -29,18 +29,25 @@ function love.load()
   -- Set graphics options
   love.graphics.setCaption("arrow_chase 0.1")
   
-  -- Preload graphics
+  -- Preload resources
   graphics = {
     arrowNormal = love.graphics.newImage('resources/textures/arrow-green.png'),
     arrowSelected = love.graphics.newImage('resources/textures/arrow-red.png'),
     arrowDying = love.graphics.newImage('resources/textures/arrow-grey.png'),
   }
   
-  
   fonts = {
     default = love.graphics.newFont('resources/fonts/pixel.ttf', 15),
     title = love.graphics.newFont('resources/fonts/pixel.ttf', 45),
   }
+  
+  music = {
+    title = love.audio.newSource("resources/music/vibe-tth.it"),
+    chase = love.audio.newSource("resources/music/vibe-ydb.it"),
+  }
+  
+  music.title:setLooping(true)
+  music.chase:setLooping(true)
   
   Gamestate.registerEvents()
   Gamestate.switch(title)

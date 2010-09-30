@@ -27,7 +27,7 @@ This code is licensed under the [MIT License](http://www.opensource.org/licenses
 ## The Credits
 
 ### The Music
-You Can Do It Better by Sergey Eybog
+You Can Do It Better by Sergey "vibe" Eybog
 
 http://lesser-vibes.com/modules.shtml CC-BY-NC
 

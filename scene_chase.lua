@@ -47,9 +47,6 @@ function chase.enter(self, pre)
     l = false,
   }
   
-  chase.music = love.audio.newSource("resources/music/vibe-ydb.it")
-  chase.music:setLooping(true)
-  
   chase.sound = {
     good = love.audio.newSource("resources/sound/good.mp3"),
     bad = love.audio.newSource("resources/sound/bad.mp3"),
@@ -58,7 +55,7 @@ function chase.enter(self, pre)
   
   chase.logger = Logger(vector(30, 30))
   
-  love.audio.play(chase.music)
+  love.audio.play(music.chase)
 end
 
 function chase.update(self, dt)
@@ -207,4 +204,8 @@ function chase.draw(self)
   end
   
   chase.logger:draw()
+end
+
+function chase.leave()
+  love.audio.stop()
 end
