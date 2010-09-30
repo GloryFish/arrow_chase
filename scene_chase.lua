@@ -16,7 +16,7 @@ chase = Gamestate.new()
 
 function chase.enter(self, pre)
   chase.paused = false
-  chase.points = 0
+  chase.points = 20
   chase.misses = 0
 
   chase.level = Level()
@@ -131,14 +131,15 @@ function chase.update(self, dt)
     
     -- Add log lines
     chase.logger:addLine(string.format("FPS: %i", love.timer.getFPS()))
+    -- chase.logger:addLine(string.format("X: %i Y: %i", love.mouse.getX(), love.mouse.getY()))
     -- chase.logger:addLine(string.format("Score: %i", chase.points - chase.misses))
     -- chase.logger:addLine(string.format("Misses: %i MPM: %f", chase.misses, chase.misses / chase.duration * 60))
-    -- chase.logger:addLine(string.format("Rating: %i", (chase.points / chase.duration * 60) - (chase.misses / chase.duration * 60)))
     chase.logger:addLine(string.format("Points: %i", chase.points, chase.points / chase.duration * 60))
     chase.logger:addLine(string.format("minArrows: %i", chase.level.minArrows))
     chase.logger:addLine(string.format("maxArrows: %i", chase.level.maxArrows))
     chase.logger:addLine(string.format("activeArrowCount: %i", activeArrowCount))
     chase.logger:addLine(string.format("Time: %i:%i", chase.duration / 60, chase.duration % 60))
+    chase.logger:addLine(string.format("Rating: %i", (chase.points / chase.duration * 60) - (chase.misses / chase.duration * 60)))
     
   else -- Game is paused
   end
