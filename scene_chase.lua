@@ -8,6 +8,7 @@
 
 require 'gamestate'
 require 'arrow'
+require 'overlay'
 require 'logger'
 require 'vector'
 require 'level'
@@ -16,8 +17,9 @@ chase = Gamestate.new()
 
 function chase.enter(self, pre)
   chase.paused = false
-  chase.points = 20
+  chase.points = 0
   chase.misses = 0
+  chase.health = 100
 
   chase.level = Level()
 
@@ -38,6 +40,8 @@ function chase.enter(self, pre)
   
   chase.arrows = {}
   chase.inactive = {}
+  
+  chase.overlay = Overlay()
   
   chase.lastMouse = {
     x = love.mouse.getX(),
@@ -122,6 +126,8 @@ function chase.update(self, dt)
       end
     end
   
+    chase.overlay:update(dt)
+  
     -- Store last mouse position
     chase.lastMouse = {
       x = love.mouse.getX(),
@@ -140,7 +146,7 @@ function chase.update(self, dt)
     chase.logger:addLine(string.format("activeArrowCount: %i", activeArrowCount))
     chase.logger:addLine(string.format("Time: %i:%i", chase.duration / 60, chase.duration % 60))
     chase.logger:addLine(string.format("Rating: %i", (chase.points / chase.duration * 60) - (chase.misses / chase.duration * 60)))
-    
+    chase.logger:addLine(string.format("Health: %i", chase.health))
   else -- Game is paused
   end
   
@@ -209,12 +215,23 @@ chase.getRandomStart = {
   
 function chase.addPoint()
   chase.points = chase.points + 1
+  chase.health = chase.health + 1
+  if (chase.health > 100) then
+    chase.health = 100
+  end
+  
   chase.level:setPoints(chase.points)
+  
+  chase.overlay.opacity = 1 - (chase.health / 100)
+  
   love.audio.play(chase.sound.good)
 end
 
 function chase.deductPoint()
   chase.misses = chase.misses + 1
+  chase.health = chase.health - 3
+
+  chase.overlay.opacity = 1.0 - (chase.health / 100)
 
   love.audio.play(chase.sound.bad)
 end
@@ -223,6 +240,8 @@ function chase.draw(self)
   for index, arrow in pairs(chase.arrows) do
     arrow:draw()
   end
+  
+  chase.overlay:draw()
   
   if (chase.paused) then
     love.graphics.setColor(0, 0, 0, 120)

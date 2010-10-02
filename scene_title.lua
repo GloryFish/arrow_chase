@@ -16,7 +16,7 @@ function title.enter()
   love.graphics.setBackgroundColor(210, 231, 245)
   love.graphics.setFont(fonts.default)
   
-  title.logo = Typeout('arrow_chase', vector(70, love.graphics.getHeight() - 70), 7, fonts.title, {r=0, g=0, b=0, a=200})
+  title.logo = Typeout('arrow_chase', vector(65, love.graphics.getHeight() - 120), 7, fonts.title, {r=0, g=0, b=0, a=200})
   title.duration = 0
 
   title.fadeDelay = 1.8
@@ -73,7 +73,7 @@ function title.draw()
 
   love.graphics.print("by jay roberts", 
                       70, 
-                      love.graphics.getHeight() - 50);
+                      love.graphics.getHeight() - 60);
 
   love.graphics.print("<click> to begin", 
                       love.graphics.getWidth() / 2 - 70, 
