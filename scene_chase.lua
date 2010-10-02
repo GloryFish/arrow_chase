@@ -9,6 +9,7 @@
 require 'gamestate'
 require 'arrow'
 require 'overlay'
+require 'flash'
 require 'logger'
 require 'vector'
 require 'level'
@@ -17,7 +18,7 @@ chase = Gamestate.new()
 
 function chase.enter(self, pre)
   chase.paused = false
-  chase.points = 0
+  chase.points = 90
   chase.misses = 0
   chase.health = 100
 
@@ -42,6 +43,7 @@ function chase.enter(self, pre)
   chase.inactive = {}
   
   chase.overlay = Overlay()
+  chase.flash = Flash()
   
   chase.lastMouse = {
     x = love.mouse.getX(),
@@ -126,7 +128,10 @@ function chase.update(self, dt)
       end
     end
   
+    chase.setHealth(chase.health + chase.level.healthRestoreRate * dt)
+  
     chase.overlay:update(dt)
+    chase.flash:update(dt)
   
     -- Store last mouse position
     chase.lastMouse = {
@@ -153,6 +158,15 @@ function chase.update(self, dt)
 end
 
 
+function chase.setHealth(health)
+  chase.health = health
+  if chase.health > 100 then
+    chase.health = 100
+  elseif chase.health < 1 then
+    chase.gameOver()
+  end
+end
+
 function chase.keypressed(self, key, unicode)
   if (key == "escape") then
     if chase.paused then
@@ -165,6 +179,8 @@ function chase.keypressed(self, key, unicode)
   end
 end
 
+function chase.gameOver()
+end
 
 function chase.mousepressed(x, y, button)
 
@@ -215,7 +231,7 @@ chase.getRandomStart = {
   
 function chase.addPoint()
   chase.points = chase.points + 1
-  chase.health = chase.health + 1
+  chase.health = chase.health + 0.5
   if (chase.health > 100) then
     chase.health = 100
   end
@@ -229,9 +245,10 @@ end
 
 function chase.deductPoint()
   chase.misses = chase.misses + 1
-  chase.health = chase.health - 3
+  chase.health = chase.health - 5
 
   chase.overlay.opacity = 1.0 - (chase.health / 100)
+  chase.flash:trigger()
 
   love.audio.play(chase.sound.bad)
 end
@@ -242,6 +259,7 @@ function chase.draw(self)
   end
   
   chase.overlay:draw()
+  chase.flash:draw()
   
   if (chase.paused) then
     love.graphics.setColor(0, 0, 0, 120)
