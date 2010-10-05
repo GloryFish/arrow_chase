@@ -20,6 +20,7 @@ require 'vector'
 require 'gamestate'
 require 'scene_title'
 require 'scene_chase'
+require 'scene_gameover'
 
 function love.load()
   love.filesystem.setIdentity('arrow_chase')

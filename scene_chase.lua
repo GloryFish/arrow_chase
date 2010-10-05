@@ -229,11 +229,19 @@ end
 
 function chase.deductPoint()
   chase.misses = chase.misses + 1
-  chase.health = chase.health - 3
+  chase.health = chase.health - 10
 
   chase.overlay.opacity = 1.0 - (chase.health / 100)
 
-  love.audio.play(chase.sound.bad)
+  -- love.audio.play(chase.sound.bad)
+  
+  if chase.health <= 0 then
+    chase.gameover()
+  end
+end
+
+function chase.gameover()
+  Gamestate.switch(gameover)
 end
 
 function chase.draw(self)
