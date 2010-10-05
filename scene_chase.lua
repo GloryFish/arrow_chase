@@ -248,6 +248,29 @@ function chase.draw(self)
   for index, arrow in pairs(chase.arrows) do
     arrow:draw()
   end
+
+  chase.logger:addLine()
+
+  love.graphics.setFont(fonts.hud)
+
+  -- Print time 
+  love.graphics.setColor(0, 0, 0, 200)
+  local time = string.format("%i:%02d", chase.duration / 60, chase.duration % 60)
+  local timeWidth = fonts.hud:getWidth(time)
+  
+  love.graphics.print(time, 
+                      love.graphics.getWidth() / 2 - timeWidth, 
+                      love.graphics.getHeight() - 70);
+
+  local score = string.format('%i', chase.points)
+  local scoreWidth = fonts.hud:getWidth(score)
+
+  -- Print score
+  love.graphics.setColor(0, 0, 0, 200)
+  love.graphics.print(score, 
+                      love.graphics.getWidth() / 2 + scoreWidth, 
+                      love.graphics.getHeight() - 70);
+
   
   chase.overlay:draw()
   
@@ -261,7 +284,7 @@ function chase.draw(self)
                         love.graphics.getHeight() / 2);
   end
   
-  chase.logger:draw()
+  -- chase.logger:draw()
 end
 
 function chase.leave()

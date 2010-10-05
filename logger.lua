@@ -28,6 +28,8 @@ function Logger:addLine(line)
 end
 
 function Logger:draw()
+  love.graphics.setFont(fonts.default)
+  
   love.graphics.setColor(self.color.r,
                          self.color.g,
                          self.color.b,

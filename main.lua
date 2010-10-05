@@ -40,6 +40,7 @@ function love.load()
   fonts = {
     default = love.graphics.newFont('resources/fonts/pixel.ttf', 15),
     title = love.graphics.newFont('resources/fonts/pixel.ttf', 45),
+    hud = love.graphics.newFont('resources/fonts/pixel.ttf', 25),
   }
   
   music = {
