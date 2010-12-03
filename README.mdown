@@ -8,12 +8,6 @@ The catch is, you have to sneak up on the arrow from behind or it will disappear
 
 This game requires speed and dexterity.
 
-
-## The Challenge
-
-This game is an entry into Ludum Dare's October 2010 Challenge. The basic gameplay is there. The real test will be to figure out a way to get revenue from a game that is entirely open-source...
-
-
 ## The Code
 
 arrow\_chase is written in [lua](http://www.lua.org/) using the excellent [Love](http://love2d.org/) framework.
